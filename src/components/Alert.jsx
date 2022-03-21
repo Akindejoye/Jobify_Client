@@ -1,7 +1,10 @@
+import { useAppContext } from "../context/appContext";
+
 const Alert = () => {
+    const { alertType, alertText } = useAppContext();
     return ( 
-        <div className="alert alert-danger">
-            Wrong or empty input
+        <div className={`alert alert-${alertType}`}>
+            {alertText}
         </div>
      );
 }

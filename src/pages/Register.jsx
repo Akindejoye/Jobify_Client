@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { Logo, FormRow, Alert } from '../components';
 import Wrapper from "../assets/wrappers/RegisterPage";
+import { useAppContext } from "../context/appContext";
 
 const initialState = {
     name: '',
     email: '',
     password: '',
     isMember: true,
-    showAlert: false,
 };
 
 const Register = () => {
@@ -15,6 +15,8 @@ const Register = () => {
     const [values, setValues] = useState(initialState);
 
     //Global state and useNavigate
+    const state = useAppContext();
+    const {isLoading, showAlert, displayAlert} = useAppContext();
 
     //Setting isMember functionality for Toggling
 const toggleMember = () => {
@@ -23,13 +25,18 @@ const toggleMember = () => {
 
     //input event handler
     const handleChange = (e) => {
-        console.log(e.target)
+        setValues({ ...values, [e.target.name]: e.target.value});
     }
 
     //form event handler for summition
     const onSubmit = (e) => {
         e.preventDefault()
-        console.log(e.target)
+        const {name, email, password, isMember} = values;
+        if(!email || !password || (!isMember && !name)) {
+            displayAlert()
+            return
+        }
+        console.log(values);
     }
 
     return ( 
@@ -37,7 +44,7 @@ const toggleMember = () => {
             <form className="form" onSubmit={onSubmit}>
                 <Logo />
                 <h3>{values.isMember ? 'Login': 'Register'}</h3>
-                {values.showAlert && <Alert />}
+                {showAlert && <Alert />}
                 {/* Name input will display if isMember is false */}
                 {!values.isMember && (
                     <FormRow
